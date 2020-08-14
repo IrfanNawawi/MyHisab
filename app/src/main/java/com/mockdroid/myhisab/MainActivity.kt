@@ -4,78 +4,58 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import net.objecthunter.exp4j.ExpressionBuilder
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btn_0.setOnClickListener {
+        // Number Button
+        btn_0.setOnClickListener { appendNumber("0", true) }
+        btn_1.setOnClickListener { appendNumber("1", true) }
+        btn_2.setOnClickListener { appendNumber("2", true) }
+        btn_3.setOnClickListener { appendNumber("3", true) }
+        btn_4.setOnClickListener { appendNumber("4", true) }
+        btn_5.setOnClickListener { appendNumber("5", true) }
+        btn_6.setOnClickListener { appendNumber("6", true) }
+        btn_7.setOnClickListener { appendNumber("7", true) }
+        btn_8.setOnClickListener { appendNumber("8", true) }
+        btn_9.setOnClickListener { appendNumber("9", true) }
 
+        // Operator Button
+        btn_plus.setOnClickListener { appendNumber("+", true) }
+        btn_minus.setOnClickListener { appendNumber("-", true) }
+        btn_kali.setOnClickListener { appendNumber("*", true) }
+        btn_bagi.setOnClickListener { appendNumber("/", true) }
+        btn_ac.setOnClickListener {
+            tv_number.text = ""
+            tv_result.text = ""
         }
 
-        btn_plus.setOnClickListener {
-            if (tv_number_1.text.toString().isEmpty() || tv_number_2.text.toString().isEmpty()) {
-                Toast.makeText(this, "Please insert Number", Toast.LENGTH_SHORT).show()
+        // Calculate
+        btn_equals.setOnClickListener {
+            val number = tv_number.text.toString()
+            val calc = ExpressionBuilder(number).build()
+
+            val result = calc.evaluate()
+            val longResult = result.toLong()
+            if (result == longResult.toDouble()) {
+                tv_result.text = longResult.toString()
             } else {
-                val a = tv_number_1.text.toString().toDouble()
-                val c = tv_number_2.text.toString().toDouble()
-
-                val d = this.tambah(a, c)
-                tv_operator.setText(d.toString())
-            }
-        }
-
-        btn_minus.setOnClickListener {
-            if (tv_number_1.text.toString().isEmpty() || tv_number_2.text.toString().isEmpty()) {
-                Toast.makeText(this, "Please insert Number", Toast.LENGTH_SHORT).show()
-            } else {
-                val a = tv_number_1.text.toString().toDouble()
-                val c = tv_number_2.text.toString().toDouble()
-
-                val d = this.kurang(a, c)
-                tv_operator.setText(d.toString())
-            }
-        }
-
-        btn_kali.setOnClickListener {
-            if (tv_number_1.text.toString().isEmpty() || tv_number_2.text.toString().isEmpty()) {
-                Toast.makeText(this, "Please insert Number", Toast.LENGTH_SHORT).show()
-            } else {
-                val a = tv_number_1.text.toString().toDouble()
-                val c = tv_number_2.text.toString().toDouble()
-
-                val d = this.kali(a, c)
-                tv_operator.setText(d.toString())
-            }
-        }
-
-        btn_bagi.setOnClickListener {
-            if (tv_number_1.text.toString().isEmpty() || tv_number_2.text.toString().isEmpty()) {
-                Toast.makeText(this, "Please insert Number", Toast.LENGTH_SHORT).show()
-            } else {
-                val a = tv_number_1.text.toString().toDouble()
-                val c = tv_number_2.text.toString().toDouble()
-
-                val d = this.bagi(a, c)
-                tv_operator.setText(d.toString())
+                tv_result.text = result.toString()
             }
         }
     }
 
-    fun tambah(a: Double, c: Double): Double {
-        return a + c
-    }
-
-    fun kurang(a: Double, c: Double): Double {
-        return a - c
-    }
-
-    fun kali(a: Double, c: Double): Double {
-        return a * c
-    }
-
-    fun bagi(a: Double, c: Double): Double {
-        return a / c
+    fun appendNumber(string: String, canClear: Boolean) {
+        if(canClear) {
+            tv_result.text = ""
+            tv_number.append(string)
+        } else {
+            tv_number.append(tv_result.text)
+            tv_number.append(string)
+            tv_result.text = ""
+        }
     }
 }
